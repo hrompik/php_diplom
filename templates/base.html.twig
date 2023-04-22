@@ -1,19 +1,67 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<!DOCTYPE html><!--[if IE 7]>
+<html class="ie7" lang="ru">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="ru">
+<![endif]-->
+<!--[if IE 9]>
+<html class="ie9" lang="ru">
+<![endif]-->
+<!--[if IE 10]>
+<html class="ie10" lang="ru">
+<![endif]-->
+<!--[if IE 11]>
+<html class="ie11" lang="ru">
+<![endif]-->
+<!--[if gt IE 11]><!-->
+<html lang="ru"> <!--<![endif]-->
+<head>
+    <title>{% block title %}Товарный агрегатор Megano{% endblock %}</title>
+    <meta name="description" content="Товарный агрегатор Megano">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link href="favicon.ico" rel="shortcut icon">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Regular.woff" as="font">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Italic.woff" as="font">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Bold.woff" as="font">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Bold_Italic.woff" as="font">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Light.woff" as="font">
+    <link rel="preload" href="assets/fonts/Roboto/Roboto-Light_Italic.woff" as="font">
+    <link rel="stylesheet" href="assets/css/fonts.css?v=98987060">
+    <link rel="stylesheet" href="assets/css/basic.css?v=98987060">
+    <link rel="stylesheet" href="assets/css/extra.css?v=98987060">
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block headJavascripts %}
+    {% endblock %}
+</head>
+<body class="Site">
+<!--if lt IE 8
+p.error-browser
+    | Ваш браузер&nbsp;
+    em устарел!&nbsp;
+    a(href="http://browsehappy.com/") Выберите новую версию
+        +s
+        | браузера здесь&nbsp;
+    | для правильного отображения сайта.
+-->
+{{ include('header.html.twig') }}
+{% block body %}{% endblock %}
+{{ include('footer.html.twig') }}
+<!--+Middle-->
+<!--    +div.-top-->
+<!--        +breadcrumbs('Главная','Портфолио')-->
+<!--    +Article('portfolio')-->
+<!---->
+<script src="assets/plg/jQuery/jquery-3.5.0.slim.min.js"></script>
+<script src="assets/plg/form/jquery.form.js"></script>
+<script src="assets/plg/form/jquery.maskedinput.min.js"></script>
+<script src="assets/plg/range/ion.rangeSlider.min.js"></script>
+<script src="assets/plg/Slider/slick.min.js"></script>
+<script src="assets/js/scripts.js"></script>
+</body>
 </html>
