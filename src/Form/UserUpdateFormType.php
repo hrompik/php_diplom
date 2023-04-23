@@ -16,18 +16,44 @@ class UserUpdateFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class)
-            ->add('phone', null, [
+            ->add('email', EmailType::class, [
+                'label' => 'E-mail',
+                'attr' => [
+                    'class' => 'form-input',
+                    'data-validate' => 'require',
+                    'placeholder' => 'send@test.test',
+                ]
+            ])
+            ->add('phone', TextType::class, [
                 'label' => 'Телефон',
+                'attr' => [
+                    'class' => 'form-input',
+                    'data-validate' => 'require',
+                    'placeholder' => 'send@test.test',
+                ]
             ])
             ->add('fio', TextType::class, [
                 'label' => 'ФИО',
+                'attr' => [
+                    'class' => 'form-input',
+                    'data-validate' => 'require',
+                ]
             ])
             ->add('plainPassword', PasswordType::class, [
-                'required' => false
+                'label' => 'Пароль',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-input',
+                    'placeholder' => 'Выберите пароль',
+                ]
             ])
             ->add('plainPasswordReply', PasswordType::class, [
-                'required' => false
+                'label' => 'Подтверждение пароля',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-input',
+                    'placeholder' => 'Введите пароль повторно',
+                ]
             ]);
     }
 

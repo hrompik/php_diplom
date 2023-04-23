@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Model\UserUpdateFormModel;
 use App\Form\UserUpdateFormType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,16 +24,21 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile', name: 'app_profile')]
-    public function profile(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response
-    {
+    public function profile(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $userPasswordHasher,
+    ): Response {
+
         /** @var User $user */
         $user = $this->getUser();
+
         $form = $this->createForm(UserUpdateFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            if (!empty($user->getPlainPassword())){
+            if (!empty($user->getPlainPassword())) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -42,7 +49,7 @@ class ProfileController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('flash_message', 'Профиль изменён');
+            $this->addFlash('success_profile_change', 'Профиль успешно сохранен');
         }
 
 

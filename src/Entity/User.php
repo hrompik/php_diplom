@@ -53,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $plainPassword = null;
     private ?string $plainPasswordReply = null;
 
+
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context, $payload)
     {
@@ -62,6 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 ->addViolation();
         }
     }
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
@@ -106,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string)$this->id;
     }
 
     /**

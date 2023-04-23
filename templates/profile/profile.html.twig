@@ -57,54 +57,53 @@
                                                data-validate="onlyImgAvatar"/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    {{ form_row(updateForm.fio, {
-                                        class: 'form-input',
-                                        attr: {placeholder: 'ФИО',  class: 'form-input', 'data-validate': 'require'},
-                                        label_attr: { class: 'form-label'},
-                                    }) }}
+
+                                <div class="form-group {% if not updateForm.fio.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.fio) }}
+                                    {{ form_errors(updateForm.fio) }}
+                                    {{ form_widget(updateForm.fio) }}
                                 </div>
+
                             </div>
 
                             <div class="row-block">
-                                <div class="form-group">
-                                    {{ form_row(updateForm.phone, {
-                                        class: 'form-input',
-                                        attr: {placeholder: '+7 (000) 000-00-00',  class: 'form-input', 'data-validate': 'require'},
-                                        label_attr: { class: 'form-label'},
-                                    }) }}
+                                <div class="form-group {% if not updateForm.phone.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.phone) }}
+                                    {{ form_errors(updateForm.phone) }}
+                                    {{ form_widget(updateForm.phone) }}
                                     <script>
                                         $(function () {
                                             $(`#user_update_form_phone`).inputmask('+7 (999) 999-99-99')
                                         })
                                     </script>
                                 </div>
-                                <div class="form-group">
-                                    {{ form_row(updateForm.email, {
-                                        attr: {placeholder: 'send@test.test',  class: 'form-input', 'data-validate': 'require'},
-                                        label: 'E-mail',
-                                        label_attr: {class: 'form-label'}
-                                    }) }}
+
+                                <div class="form-group {% if not updateForm.email.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.email) }}
+                                    {{ form_errors(updateForm.email) }}
+                                    {{ form_widget(updateForm.email) }}
                                 </div>
-                                <div class="form-group">
-                                    {{ form_row(updateForm.plainPassword, {
-                                        attr: {placeholder: 'Выберите пароль',  class: 'form-input'},
-                                        label: 'Пароль',
-                                        label_attr: {class: 'form-label'}
-                                    }) }}
+
+                                <div class="form-group {% if not updateForm.plainPassword.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.plainPassword) }}
+                                    {{ form_errors(updateForm.plainPassword) }}
+                                    {{ form_widget(updateForm.plainPassword) }}
                                 </div>
-                                <div class="form-group">
-                                    {{ form_row(updateForm.plainPasswordReply, {
-                                        attr: {placeholder: 'Введите пароль повторно',  class: 'form-input'},
-                                        label: 'Подтверждение пароля',
-                                        label_attr: {class: 'form-label'}
-                                    }) }}
+
+                                <div class="form-group {% if not updateForm.plainPasswordReply.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.plainPasswordReply) }}
+                                    {{ form_errors(updateForm.plainPasswordReply) }}
+                                    {{ form_widget(updateForm.plainPasswordReply) }}
                                 </div>
+
                                 <div class="form-group">
                                     <div class="Profile-btn">
                                         <button class="btn btn_success" type="submit">Сохранить</button>
                                     </div>
-                                    <div class="Profile-success">Профиль успешно сохранен</div>
+                                    {% for message in app.flashes('success_profile_change') %}
+                                        <div class="Profile-success">{{ message }}</div>
+                                    {% endfor %}
+
                                 </div>
                             </div>
                         </div>

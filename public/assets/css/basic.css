@@ -834,9 +834,14 @@ select + select {
   background-color: #f9fafc;
   line-height: 46px;
 }
-.form .form-input_error {
+.form .form-input_error, .form .form-input_error input {
   border-color: #f26d7d;
 }
+
+.form .form-input_error ul {
+  color: #f26d7d;
+}
+
 .form .form-input:focus {
   outline: none;
 }
