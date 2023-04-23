@@ -8,12 +8,12 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['phone'], message: 'There is already an account with this phone')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['phone'], message: 'Такой телефон уже занят')]
+#[UniqueEntity(fields: ['email'], message: 'Такая почта уже занята')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableEntity;
@@ -43,6 +43,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
+
+    #[Assert\Length(
+        min: 6,
+        max: 50,
+        minMessage: 'Минимальная длина пароля 6',
+        maxMessage: 'Максимальная длина пароля 50',
+    )]
+    private ?string $plainPassword = null;
+    private ?string $plainPasswordReply = null;
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->plainPasswordReply !== $this->plainPassword) {
+            $context->buildViolation('Пароли должны совпадать!')
+                ->atPath('plainPassword')
+                ->addViolation();
+        }
+    }
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
+    public function getPlainPasswordReply(): ?string
+    {
+        return $this->plainPasswordReply;
+    }
+
+    public function setPlainPasswordReply(?string $plainPasswordReply): void
+    {
+        $this->plainPasswordReply = $plainPasswordReply;
+    }
 
     public function getId(): ?int
     {
@@ -121,14 +159,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPhone(string $phone): self
     {
-        $this->phone = self::formatPhone($phone);
+        $this->phone = self::clearPhone($phone);
         return $this;
+    }
+
+    public static function clearPhone(string $phone): string
+    {
+        $phone = str_replace([' ', '(', ')', '-', '_', '+'], '', $phone);
+        return substr($phone, 1);
     }
 
     public static function formatPhone(string $phone): string
     {
-        $phone = str_replace([' ', '(', ')', '-', '_', '+'], '', $phone);
-        return substr($phone, 1);
+        return '+7 (' .
+            substr($phone, 0, 3) . ') ' .
+            substr($phone, 3, 3) .
+            '-' .
+            substr($phone, 6, 2) .
+            '-' .
+            substr($phone, 8, 2);
     }
 
     public function getFio(): ?string

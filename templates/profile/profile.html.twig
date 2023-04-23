@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block body %}
+    <div class="Middle Middle_top">
+        <div class="Middle-top">
+            <div class="wrap">
+                <div class="Middle-header">
+                    <h1 class="Middle-title">Профиль</h1>
+                    <ul class="breadcrumbs Middle-breadcrumbs">
+                        <li class="breadcrumbs-item"><a href="{{ path('app_main') }}">Главная</a></li>
+                        <li class="breadcrumbs-item"><a href="{{ path('app_account') }}">Личный кабинет</a></li>
+                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>Профиль</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="Section Section_column Section_columnLeft">
+            <div class="wrap">
+                <div class="Section-column">
+                    <div class="Section-columnSection">
+                        <header class="Section-header">
+                            <strong class="Section-title">Навигация</strong>
+                        </header>
+                        <div class="Section-columnContent">
+                            <div class="NavigateProfile">
+                                <ul class="menu menu_vt">
+                                    <li class="menu-item"><a class="menu-link" href="{{ path('app_account') }}">Личный
+                                            кабинет</a></li>
+                                    <li class="menu-item_ACTIVE menu-item"><a class="menu-link"
+                                                                              href="{{ path('app_profile') }}">Профиль</a>
+                                    </li>
+                                    <li class="menu-item"><a class="menu-link" href="{{ path('app_historyorder') }}">История
+                                            заказов</a></li>
+                                    <li class="menu-item"><a class="menu-link" href="{{ path('app_historyview') }}">История
+                                            просмотра</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="Section-content">
+                    <div class="Profile">
+                        {{ form_start(updateForm, { attr: {class: 'form Profile-form'} }) }}
+                        <div class="row">
+                            <div class="row-block">
+                                <div class="form-group">
+                                    <label class="form-label" for="avatar">Аватар
+                                    </label>
+                                    <div class="Profile-avatar Profile-avatar_noimg">
+                                        <div class="Profile-img"><img src="assets/img/#.png" alt="#.png"/>
+                                        </div>
+                                        <label class="Profile-fileLabel" for="avatar">Выберите аватар
+                                        </label>
+                                        <input class="Profile-file form-input" id="avatar" name="avatar" type="file"
+                                               data-validate="onlyImgAvatar"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_row(updateForm.fio, {
+                                        class: 'form-input',
+                                        attr: {placeholder: 'ФИО',  class: 'form-input', 'data-validate': 'require'},
+                                        label_attr: { class: 'form-label'},
+                                    }) }}
+                                </div>
+                            </div>
+
+                            <div class="row-block">
+                                <div class="form-group">
+                                    {{ form_row(updateForm.phone, {
+                                        class: 'form-input',
+                                        attr: {placeholder: '+7 (000) 000-00-00',  class: 'form-input', 'data-validate': 'require'},
+                                        label_attr: { class: 'form-label'},
+                                    }) }}
+                                    <script>
+                                        $(function () {
+                                            $(`#user_update_form_phone`).inputmask('+7 (999) 999-99-99')
+                                        })
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_row(updateForm.email, {
+                                        attr: {placeholder: 'send@test.test',  class: 'form-input', 'data-validate': 'require'},
+                                        label: 'E-mail',
+                                        label_attr: {class: 'form-label'}
+                                    }) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_row(updateForm.plainPassword, {
+                                        attr: {placeholder: 'Выберите пароль',  class: 'form-input'},
+                                        label: 'Пароль',
+                                        label_attr: {class: 'form-label'}
+                                    }) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form_row(updateForm.plainPasswordReply, {
+                                        attr: {placeholder: 'Введите пароль повторно',  class: 'form-input'},
+                                        label: 'Подтверждение пароля',
+                                        label_attr: {class: 'form-label'}
+                                    }) }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="Profile-btn">
+                                        <button class="btn btn_success" type="submit">Сохранить</button>
+                                    </div>
+                                    <div class="Profile-success">Профиль успешно сохранен</div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(updateForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -29,7 +29,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function authenticate(Request $request): Passport
     {
         $phone = $request->request->get('phone', '');
-        $phone = User::formatPhone($phone);
+        $phone = User::clearPhone($phone);
 
         $request->getSession()->set(Security::LAST_USERNAME, $phone);
 

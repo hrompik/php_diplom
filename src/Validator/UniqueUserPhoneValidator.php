@@ -27,7 +27,7 @@ class UniqueUserPhoneValidator extends ConstraintValidator
             return;
         }
 
-        if (!$this->userRepository->findOneBy(['phone' => User::formatPhone($value)])) {
+        if (!$this->userRepository->findOneBy(['phone' => User::clearPhone($value)])) {
             return;
         }
 
