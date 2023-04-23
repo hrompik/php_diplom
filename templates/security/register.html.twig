@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Авторизация{% endblock %}
+
+{% block body %}
+    <div class="Middle Middle_top">
+        <div class="Middle-top">
+            <div class="wrap">
+                <div class="Middle-header">
+                    <h1 class="Middle-title">Регистрация</h1>
+                    <ul class="breadcrumbs Middle-breadcrumbs">
+                        <li class="breadcrumbs-item"><a href="{{ path('app_main') }}">Главная</a></li>
+                        <li class="breadcrumbs-item breadcrumbs-item_current"><span>Регистрация</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="Section">
+            <div class="wrap">
+                {{ form_start(registrationForm, { attr: {class: 'form Authorization'} }) }}
+                <div class="form-group">
+                    {{ form_row(registrationForm.phone, {
+                        class: 'form-input',
+                        attr: {placeholder: '+7 (000) 000-00-00',  class: 'form-input', 'data-validate': 'require'},
+                        label_attr: { class: 'form-label'},
+                    }) }}
+                </div>
+                <script>
+                    $(function () {
+                        $(`#user_registration_form_phone`).inputmask('+7 (999) 999-99-99')
+                    })
+                </script>
+
+                <div class="form-group">
+                    {{ form_row(registrationForm.email, {
+                        attr: {placeholder: 'send@test.test',  class: 'form-input', 'data-validate': 'require'},
+                        label: 'E-mail',
+                        label_attr: {class: 'form-label'}
+                    }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(registrationForm.plainPassword, {
+                        attr: {placeholder: 'Выберите пароль',  class: 'form-input', 'data-validate': 'require'},
+                        label: 'Пароль',
+                        label_attr: {class: 'form-label'}
+                    }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(registrationForm.plainPasswordReply, {
+                        attr: {placeholder: 'Введите пароль повторно',  class: 'form-input', 'data-validate': 'require'},
+                        label: 'Подтверждение пароля',
+                        label_attr: {class: 'form-label'}
+                    }) }}
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn_primary" type="submit">Зарегистрироваться</button>
+                </div>
+                {{ form_end(registrationForm) }}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

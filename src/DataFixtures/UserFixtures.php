@@ -22,17 +22,19 @@ class UserFixtures extends Fixture
         $user
             ->setEmail('admin@symfony.skillbox')
             ->setFio('Администратор')
-            ->setPhone('000')
-            ->setPassword($this->passwordHasher->hashPassword($user, '123456'));
+            ->setPhone('1111111111')
+            ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+            ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($user);
 
         $user = new User();
         $user
             ->setEmail('user@symfony.skillbox')
-            ->setFio('Покупатель')
-            ->setPhone('111')
-            ->setPassword($this->passwordHasher->hashPassword($user, '123456'));
+            ->setFio('Иванов Иван Иванович')
+            ->setPhone('2222222222')
+            ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+            ->setRoles(['ROLE_USER']);
 
         $manager->persist($user);
 
