@@ -121,10 +121,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPhone(string $phone): self
     {
-        $phone = str_replace([' ', '(', ')', '-', '_', '+'], '', $phone);
-        $this->phone = substr($phone, 1);
-
+        $this->phone = self::formatPhone($phone);
         return $this;
+    }
+
+    public static function formatPhone(string $phone): string
+    {
+        $phone = str_replace([' ', '(', ')', '-', '_', '+'], '', $phone);
+        return substr($phone, 1);
     }
 
     public function getFio(): ?string

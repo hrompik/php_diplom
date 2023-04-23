@@ -22,7 +22,7 @@ class UserFixtures extends Fixture
         $user
             ->setEmail('admin@symfony.skillbox')
             ->setFio('Администратор')
-            ->setPhone('1111111111')
+            ->setPhone('+7 (111) 111-11-11')
             ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
             ->setRoles(['ROLE_ADMIN']);
 
@@ -32,7 +32,7 @@ class UserFixtures extends Fixture
         $user
             ->setEmail('user@symfony.skillbox')
             ->setFio('Иванов Иван Иванович')
-            ->setPhone('2222222222')
+            ->setPhone('+7 (222) 222-22-22')
             ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
             ->setRoles(['ROLE_USER']);
 

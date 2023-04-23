@@ -18,6 +18,7 @@ class UniqueUserPhoneValidator extends ConstraintValidator
     {
         $this->userRepository = $userRepository;
     }
+
     public function validate($value, Constraint $constraint)
     {
         /* @var $constraint UniqueUserPhone */
@@ -25,10 +26,8 @@ class UniqueUserPhoneValidator extends ConstraintValidator
         if (null === $value || '' === $value) {
             return;
         }
-        $user = new User();
-        $user->setPhone($value);
 
-        if (! $this->userRepository->findOneBy(['phone' => $user->getPhone()])) {
+        if (!$this->userRepository->findOneBy(['phone' => User::formatPhone($value)])) {
             return;
         }
 

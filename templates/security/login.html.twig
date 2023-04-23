@@ -40,10 +40,15 @@
                                 <div class="form-group">
                                     <label class="form-label" for="phone">Телефон</label>
                                     <input class="form-input" id="phone" name="phone" type="text"
-                                           placeholder="+70000000000"
+                                           placeholder="+7 (000) 000-00-00"
                                            value="{{ last_phone }}"
                                            data-validate="require"/>
                                 </div>
+                                <script>
+                                    $(function () {
+                                        $(`#phone`).inputmask('+7 (999) 999-99-99')
+                                    })
+                                </script>
                                 <div class="form-group">
                                     <label class="form-label" for="password">Пароль</label>
                                     <input class="form-input" id="password" name="password" type="password"
