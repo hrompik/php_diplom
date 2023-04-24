@@ -45,16 +45,22 @@
                         {{ form_start(updateForm, { attr: {class: 'form Profile-form'} }) }}
                         <div class="row">
                             <div class="row-block">
-                                <div class="form-group">
-                                    <label class="form-label" for="avatar">Аватар
-                                    </label>
-                                    <div class="Profile-avatar Profile-avatar_noimg">
-                                        <div class="Profile-img"><img src="assets/img/#.png" alt="#.png"/>
+
+                                <div class="form-group {% if not updateForm.image.vars.valid %}form-input_error{% endif %}">
+                                    {{ form_label(updateForm.image) }}
+                                    {{ form_errors(updateForm.image) }}
+                                    <div class="Profile-avatar">
+                                        <div class="Profile-img">
+                                            {% if updateForm.vars.data.avatar %}
+                                                <img src="{{ uploaded_asset('avatar_uploads_url', updateForm.vars.data.avatar) }}"
+                                                     alt="{{ updateForm.vars.data.avatar }}">
+                                            {% else %}
+                                                <img>
+                                            {% endif %}
                                         </div>
                                         <label class="Profile-fileLabel" for="avatar">Выберите аватар
                                         </label>
-                                        <input class="Profile-file form-input" id="avatar" name="avatar" type="file"
-                                               data-validate="onlyImgAvatar"/>
+                                        {{ form_widget(updateForm.image) }}
                                     </div>
                                 </div>
 

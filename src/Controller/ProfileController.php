@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserUpdateFormType;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -28,6 +30,7 @@ class ProfileController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $userPasswordHasher,
+        FileUploader $fileUploader
     ): Response {
 
         /** @var User $user */
@@ -37,6 +40,7 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
             $user = $form->getData();
             if (!empty($user->getPlainPassword())) {
                 $user->setPassword(
@@ -46,6 +50,13 @@ class ProfileController extends AbstractController
                     )
                 );
             }
+            /** @var UploadedFile|null $image */
+            $image = $form->get('image')->getData();
+
+            if ($image) {
+                $user->setAvatar($fileUploader->uploadFile($image, $user->getAvatar()));
+            }
+
             $em->persist($user);
             $em->flush();
 
