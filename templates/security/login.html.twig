@@ -24,8 +24,8 @@
                     <div class="row">
                         <div class="row-block">
                             {% if error %}
-                                <div class="form-group">
-                                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                <div class="form-group form-input_error">
+                                    <div style="color: red">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                                 </div>
                             {% endif %}
 
@@ -37,6 +37,7 @@
                                     </div>
                                 </div>
                             {% else %}
+
                                 <div class="form-group">
                                     <label class="form-label" for="phone">Телефон</label>
                                     <input class="form-input" id="phone" name="phone" type="text"
@@ -55,6 +56,7 @@
                                            placeholder="Ваш пароль"
                                            data-validate="require"/>
                                 </div>
+
                                 <div class="form-group">
                                     <button class="btn btn_primary" type="submit">Войти</button>
                                 </div>
@@ -62,6 +64,23 @@
                         </div>
                     </div>
                 </form>
+
+
+                {% if error %}
+                    <br>
+                    <hr>
+                    <form class="form Authorization" method="post" action="{{ path('app_get_new_password') }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <input type="hidden" name="phone" value="{{ last_phone }}">
+                        <div class="row">
+                            <div class="row-block">
+                                <div class="form-group">
+                                    <button class="btn btn_primary" type="submit">Получить новый пароль на почту</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,0 +1,9 @@
+{% extends 'email/emailBase.html.twig' %}
+
+{% block content %}
+    <div>
+        <h4>Добро пожаловать!</h4>
+        <p>Ваш логин: {{ user.phone }}</p>
+        <p>Ваш пароль: {{ password }}</p>
+    </div>
+{% endblock %}

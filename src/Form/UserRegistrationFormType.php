@@ -22,10 +22,6 @@ class UserRegistrationFormType extends AbstractType
                 'label' => 'Телефон',
                 'attr' => ['class' => 'form-input']
             ])
-            ->add('fio', TextType::class, [
-                'label' => 'ФИО',
-                'attr' => ['class' => 'form-input']
-            ])
             ->add('plainPassword', PasswordType::class, [
                 'required' => false,
                 'attr' => ['class' => 'form-input']

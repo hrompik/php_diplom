@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use App\Form\Model\UserRegistrationFormModel;
+use App\Repository\UserRepository;
+use App\Service\Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
 use App\Form\UserRegistrationFormType;
@@ -34,13 +38,15 @@ class SecurityController extends AbstractController
         );
     }
 
+
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         UserAuthenticatorInterface $userAuthenticator,
         LoginFormAuthenticator $authenticator,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Mailer $mailer
     ): Response {
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
@@ -65,8 +71,7 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            // do anything else you need here, like send an email
+            $mailer->sendWelcomeMail($user, $userModel->plainPassword);
 
             return $userAuthenticator->authenticateUser(
                 $user,
@@ -78,5 +83,31 @@ class SecurityController extends AbstractController
         return $this->render('security/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    #[Route(path: '/get_new_password', name: 'app_get_new_password')]
+    public function getNewPassword(
+        Request $request,
+        UserRepository $userRepository,
+        Mailer $mailer,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $urlGenerator
+    ): Response {
+        $phone = $request->request->get('phone');
+        if (empty($phone)) {
+            return new RedirectResponse($urlGenerator->generate('app_main'));
+        }
+        $user = $userRepository->findOneBy(['phone' => $phone]);
+        if (isset($user)) {
+            $password = str_replace(['+', '-', '_', '=', '|'], '', base64_encode(random_bytes(15)));
+            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $mailer->sendNewPassword($user, $password);
+        }
+
+        return $this->render('security/newpassword.html.twig');
     }
 }
