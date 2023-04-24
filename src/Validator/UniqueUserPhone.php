@@ -13,4 +13,5 @@ use Symfony\Component\Validator\Constraint;
 class UniqueUserPhone extends Constraint
 {
     public $message = 'Пользователь c телефоном "{{ value }}" уже зарегистрирован.';
+    public $code = 'isRegistered';
 }

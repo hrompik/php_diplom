@@ -171,10 +171,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return substr($phone, 1);
     }
 
-    public static function formatPhone(string $phone): string
+    public function getFormattedPhone(): string
     {
+        $phone = $this->getPhone();
         return '+7 (' .
-            substr($phone, 0, 3) . ') ' .
+            substr($phone, 0, 3) .
+            ') ' .
             substr($phone, 3, 3) .
             '-' .
             substr($phone, 6, 2) .

@@ -18,7 +18,7 @@
         <div class="Section">
             <div class="wrap">
                 {{ form_start(registrationForm, { attr: {class: 'form Authorization'} }) }}
-                <div class="form-group">
+                <div class="form-group {% if not registrationForm.phone.vars.valid %}form-input_error{% endif %}">
                     {{ form_row(registrationForm.phone, {
                         class: 'form-input',
                         attr: {placeholder: '+7 (000) 000-00-00',  class: 'form-input', 'data-validate': 'require'},
@@ -31,14 +31,14 @@
                     })
                 </script>
 
-                <div class="form-group">
+                <div class="form-group {% if not registrationForm.email.vars.valid %}form-input_error{% endif %}">
                     {{ form_row(registrationForm.email, {
                         attr: {placeholder: 'send@test.test',  class: 'form-input', 'data-validate': 'require'},
                         label: 'E-mail',
                         label_attr: {class: 'form-label'}
                     }) }}
                 </div>
-                <div class="form-group">
+                <div class="form-group {% if not registrationForm.plainPassword.vars.valid %}form-input_error{% endif %}">
                     {{ form_row(registrationForm.plainPassword, {
                         attr: {placeholder: 'Выберите пароль',  class: 'form-input', 'data-validate': 'require'},
                         label: 'Пароль',
@@ -58,6 +58,43 @@
                 </div>
 
                 {{ form_end(registrationForm) }}
+
+                {% set showNewPassButton = false %}
+
+                {% if not registrationForm.phone.vars.valid %}
+                    {% for error in registrationForm.phone.vars.errors %}
+                        {% if error.cause.constraint.code??'' == 'isRegistered' %}
+                            {% set showNewPassButton = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if not registrationForm.email.vars.valid %}
+                    {% for error in registrationForm.email.vars.errors %}
+                        {% if error.cause.constraint.code??'' == 'isRegistered' %}
+                            {% set showNewPassButton = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if showNewPassButton %}
+                    <br>
+                    <hr>
+                    <form class="form Authorization" method="post" action="{{ path('app_get_new_password') }}">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <input type="hidden" name="phone" value="{{ registrationForm.phone.vars.value??'' }}">
+                        <input type="hidden" name="email" value="{{ registrationForm.email.vars.value??'' }}">
+                        <div class="row">
+                            <div class="row-block">
+                                <div class="form-group">
+                                    <button class="btn btn_primary" type="submit">Получить новый пароль на почту
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+
 
             </div>
         </div>

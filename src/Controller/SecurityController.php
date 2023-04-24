@@ -95,10 +95,20 @@ class SecurityController extends AbstractController
         UrlGeneratorInterface $urlGenerator
     ): Response {
         $phone = $request->request->get('phone');
-        if (empty($phone)) {
+        if ($phone[0] === '+') {
+            $phone = User::clearPhone($phone);
+        }
+
+        $email = $request->request->get('email');
+
+        if (empty($phone) && empty($email)) {
             return new RedirectResponse($urlGenerator->generate('app_main'));
         }
         $user = $userRepository->findOneBy(['phone' => $phone]);
+        if (!isset($user)) {
+            $user = $userRepository->findOneBy(['email' => $email]);
+        }
+
         if (isset($user)) {
             $password = str_replace(['+', '-', '_', '=', '|'], '', base64_encode(random_bytes(15)));
             $user->setPassword($userPasswordHasher->hashPassword($user, $password));

@@ -38,7 +38,7 @@ class Mailer
     {
         $email = (new TemplatedEmail())
             ->from(new Address('noreply@symfony.skillbox', 'Товарный агрегатор Megano'))
-            ->to(new Address($user->getEmail(), $user->getPhone()))
+            ->to(new Address($user->getEmail(), $user->getFormattedPhone()))
             ->htmlTemplate($template)
             ->subject($subject)
             ->context([
