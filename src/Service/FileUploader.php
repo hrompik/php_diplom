@@ -10,14 +10,17 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
+    const AVATAR_STORAGE = 'avatarsStorage';
+    const CATEGORIES_STORAGE = 'categoriesStorage';
 
     public function __construct(
         private FilesystemOperator $avatarsStorage,
+        private FilesystemOperator $categoriesStorage,
         private SluggerInterface $slugger
     ) {
     }
 
-    public function uploadFile(File $file, ?string $oldFileName = null): string
+    public function uploadFile(string $storageName, File $file, ?string $oldFileName = null): string
     {
         $fileName = $this->slugger
             ->slug(
@@ -32,14 +35,14 @@ class FileUploader
 
         $stream = fopen($file->getPathname(), 'r');
 
-        $this->avatarsStorage->writeStream($fileName, $stream);
+        $this->$storageName->writeStream($fileName, $stream);
         if (is_resource($stream)) {
             fclose($stream);
         }
 
 
-        if ($oldFileName && $this->avatarsStorage->has($oldFileName)) {
-            $this->avatarsStorage->delete($oldFileName);
+        if ($oldFileName && $this->$storageName->has($oldFileName)) {
+            $this->$storageName->delete($oldFileName);
         }
 
         return $fileName;

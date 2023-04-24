@@ -6,6 +6,8 @@
 parameters:
     avatar_uploads: 'uploads/avatars'
     avatar_uploads_url: '%env(SITE_URL)%/%avatar_uploads%'
+    category_uploads: 'uploads/categories'
+    category_uploads_url: '%env(SITE_URL)%/%category_uploads%'
 
 services:
     # default configuration for services in *this* file

@@ -32,7 +32,6 @@ class ProfileController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         FileUploader $fileUploader
     ): Response {
-
         /** @var User $user */
         $user = $this->getUser();
 
@@ -54,7 +53,7 @@ class ProfileController extends AbstractController
             $image = $form->get('image')->getData();
 
             if ($image) {
-                $user->setAvatar($fileUploader->uploadFile($image, $user->getAvatar()));
+                $user->setAvatar($fileUploader->uploadFile(FileUploader::AVATAR_STORAGE, $image, $user->getAvatar()));
             }
 
             $em->persist($user);
