@@ -12,11 +12,13 @@ class FileUploader
 {
     const AVATAR_STORAGE = 'avatarsStorage';
     const CATEGORIES_STORAGE = 'categoriesStorage';
+    const PRODUCTS_STORAGE = 'productsStorage';
 
     public function __construct(
-        private FilesystemOperator $avatarsStorage,
-        private FilesystemOperator $categoriesStorage,
-        private SluggerInterface $slugger
+        private readonly FilesystemOperator $avatarsStorage,
+        private readonly FilesystemOperator $categoriesStorage,
+        private readonly FilesystemOperator $productsStorage,
+        private readonly SluggerInterface $slugger
     ) {
     }
 

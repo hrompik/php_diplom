@@ -4,8 +4,12 @@ flysystem:
         avatars.storage:
             adapter: 'local'
             options:
-                directory: '%kernel.project_dir%/public/uploads/avatars'
+                directory: '%kernel.project_dir%/public/%avatar_uploads%'
         categories.storage:
             adapter: 'local'
             options:
-                directory: '%kernel.project_dir%/public/uploads/categories'
+                directory: '%kernel.project_dir%/public/%category_uploads%'
+        products.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public/%product_uploads%'
