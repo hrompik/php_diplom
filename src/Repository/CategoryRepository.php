@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use App\Service\CacheMenu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry, private CacheMenu $cache)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
     }
@@ -27,15 +26,13 @@ class CategoryRepository extends ServiceEntityRepository
      */
     public function getMenuCategories(): array
     {
-        return $this->cache->getMenu(function () {
-            return $this->createQueryBuilder('c')
-                ->leftJoin('c.children', 'ch')
-                ->addSelect('ch')
-                ->andWhere('c.parent IS NULL')
-                ->orderBy('c.sort DESC, ch.sort', 'DESC')
-                ->getQuery()
-                ->getResult();
-        });
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.children', 'ch')
+            ->addSelect('ch')
+            ->andWhere('c.parent IS NULL')
+            ->orderBy('c.sort DESC, ch.sort', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(Category $entity, bool $flush = false): void

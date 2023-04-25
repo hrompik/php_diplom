@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Repository\CategoryRepository;
+use App\Service\CategoriesService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class MenuController extends AbstractController
 {
-    public function menu(CategoryRepository $categoryRepository): Response
+    public function menu(CategoriesService $categories): Response
     {
         return $this->render('partial/menu.html.twig', [
-            'categories' => $categoryRepository->getMenuCategories(),
+            'categories' => $categories->getMenuCategories(),
         ]);
     }
 }
