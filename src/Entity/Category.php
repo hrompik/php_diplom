@@ -89,6 +89,11 @@ class Category
         return $this;
     }
 
+    public function getLink(): string
+    {
+        return str_replace(' ', '_', $this->name);
+    }
+
     public function getName(): ?string
     {
         return $this->name;
