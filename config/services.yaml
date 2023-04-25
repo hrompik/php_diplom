@@ -8,7 +8,7 @@ parameters:
     avatar_uploads_url: '%env(SITE_URL)%/%avatar_uploads%'
     category_uploads: 'uploads/categories'
     category_uploads_url: '%env(SITE_URL)%/%category_uploads%'
-    product_uploads: 'uploads/categories'
+    product_uploads: 'uploads/products'
     product_uploads_url: '%env(SITE_URL)%/%product_uploads%'
 
 services:

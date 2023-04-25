@@ -5,17 +5,20 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Service\FileUploader;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\File\File;
 
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends BaseFixtures
 {
-    public function __construct(private FileUploader $fileUploader, private CategoryRepository $categoryRepository)
-    {
+    public static $categories = [];
+
+    public function __construct(
+        private readonly FileUploader $fileUploader,
+        private readonly CategoryRepository $categoryRepository
+    ) {
     }
 
-    public function load(ObjectManager $manager): void
+    public function loadData(ObjectManager $manager): void
     {
         $categories = [
             'monitors' => '1.svg',
@@ -26,9 +29,10 @@ class CategoryFixtures extends Fixture
             'tablets' => '8.svg',
             'microwaves' => '9.svg',
             'teapots' => '10.svg',
-            'mixer' => '12.svg',
+            'others' => '12.svg',
         ];
 
+        $i = 1;
         foreach ($categories as $name => $icon) {
             $category = new Category();
             $category
@@ -41,9 +45,14 @@ class CategoryFixtures extends Fixture
                 )
                 ->setSort(rand(1, 50));
             $manager->persist($category);
+            self::$categories[] = 'Category' . $i;
+            $this->addReference('Category' . $i, $category);
+            $i++;
         }
+        array_pop(self::$categories);
 
         $manager->flush();
+
         $categories = $this->categoryRepository->findAll();
         $index = array_rand($categories);
         $category = $categories[$index];
