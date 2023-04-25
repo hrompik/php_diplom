@@ -25,8 +25,9 @@ class CategoriesService
 
     public function getMenuCategories()
     {
+        #TODO УБрать доп время
         return $this->cache->get('menu', function (ItemInterface $item) {
-            $item->expiresAfter($this->time);
+            $item->expiresAfter($this->time+100);
             return $this->categoryRepository->getMenuCategories();
         });
     }

@@ -16,6 +16,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
+
+    public function getProduct(int $id):?Product
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->leftJoin('p.prices', 'prices')
+            ->addSelect('prices')
+            ->leftJoin('prices.seller', 'seller')
+            ->addSelect('seller')
+            ->where('p.id = :pId')
+            ->orderBy('prices.cost','ASC')
+            ->setParameter('pId', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);

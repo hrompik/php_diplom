@@ -16,9 +16,6 @@ class CatalogController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/articles/{slug}", name="app_article")
-     */
     #[Route('/catalog/{id}', name: 'app_catalog_category')]
     public function category(int $id): Response
     {
