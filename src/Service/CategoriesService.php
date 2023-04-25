@@ -10,6 +10,7 @@ class CategoriesService
 {
 
     public function __construct(
+        private readonly int $time,
         private readonly CacheItemPoolInterface $cache,
         private readonly CategoryRepository $categoryRepository
     ) {
@@ -25,7 +26,7 @@ class CategoriesService
     public function getMenuCategories()
     {
         return $this->cache->get('menu', function (ItemInterface $item) {
-            $item->expiresAfter(24*60*60);
+            $item->expiresAfter($this->time);
             return $this->categoryRepository->getMenuCategories();
         });
     }
