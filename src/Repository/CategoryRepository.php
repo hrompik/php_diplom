@@ -29,6 +29,8 @@ class CategoryRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->leftJoin('c.children', 'ch')
             ->addSelect('ch')
+            ->innerJoin('c.products', 'p')
+            ->addSelect('p')
             ->andWhere('c.parent IS NULL')
             ->orderBy('c.sort DESC, ch.sort', 'DESC')
             ->getQuery()

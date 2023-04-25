@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use App\Service\CategoriesService;
 use App\Service\FileUploader;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\File\File;
@@ -14,7 +15,8 @@ class CategoryFixtures extends BaseFixtures
 
     public function __construct(
         private readonly FileUploader $fileUploader,
-        private readonly CategoryRepository $categoryRepository
+        private readonly CategoryRepository $categoryRepository,
+        private readonly CategoriesService $categoriesService,
     ) {
     }
 
@@ -61,6 +63,9 @@ class CategoryFixtures extends BaseFixtures
         $category->setParent($parent);
         $manager->persist($category);
         $manager->flush();
+
+        $this->categoriesService->resetMenuCategories();
+
     }
 
 }
