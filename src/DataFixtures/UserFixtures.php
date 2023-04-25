@@ -12,9 +12,10 @@ class UserFixtures extends BaseFixtures
     {
     }
 
+    public static $users = [];
+
     public function loadData(ObjectManager $manager): void
     {
-
         $this->create(User::class, function (User $user) use ($manager) {
             $user
                 ->setEmail('admin@symfony.skillbox')
@@ -22,17 +23,20 @@ class UserFixtures extends BaseFixtures
                 ->setPhone('+7 (111) 111-11-11')
                 ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
                 ->setRoles(['ROLE_ADMIN']);
-            ;
         });
 
-        $this->create(User::class, function (User $user) use ($manager) {
-            $user
-                ->setEmail('user@symfony.skillbox')
-                ->setFio('Иванов Иван Иванович')
-                ->setPhone('+7 (222) 222-22-22')
-                ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
-                ->setRoles(['ROLE_USER']);
-            ;
-        });
+
+        for ($i = 0; $i < 9; $i++) {
+            $user = $this->create(User::class, function (User $user) use ($manager, $i) {
+                $user
+                    ->setEmail($this->faker->email)
+                    ->setFio($this->faker->name)
+                    ->setPhone('+7 (222) 222-22-2' . $i)
+                    ->setPassword($this->passwordHasher->hashPassword($user, '123456'))
+                    ->setRoles(['ROLE_USER']);
+            });
+            self::$users[] = 'User' . $i;
+            $this->addReference('User' . $i, $user);
+        }
     }
 }

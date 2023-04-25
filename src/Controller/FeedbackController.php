@@ -2,16 +2,16 @@
 
 namespace App\Controller;
 
-use App\Service\TopService;
+use App\Service\FeedbackService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class TopController extends AbstractController
+class FeedbackController extends AbstractController
 {
-    public function top(TopService $topService): Response
+    public function feedback(FeedbackService $feedbackService): Response
     {
         return $this->render('partial/top.html.twig', [
-            'top' => $topService->getTop(),
+            'top' => $feedbackService->getTop(),
         ]);
     }
 }

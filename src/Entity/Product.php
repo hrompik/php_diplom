@@ -40,10 +40,14 @@ class Product
     #[ORM\Column]
     private ?int $sold = 0;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Feedback::class)]
+    private Collection $feedbacks;
+
     public function __construct()
     {
         $this->prices = new ArrayCollection();
         $this->productImages = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,6 +171,36 @@ class Product
     public function setSold(int $sold): self
     {
         $this->sold = $sold;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getProduct() === $this) {
+                $feedback->setProduct(null);
+            }
+        }
 
         return $this;
     }

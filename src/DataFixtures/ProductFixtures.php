@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Feedback;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Service\FileUploader;
@@ -82,6 +83,16 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
                 )->setProduct($product);
                 $manager->persist($image);
             }
+
+            for ($j = 0; $j < rand(1, 5); $j++) {
+                $feedback = new Feedback();
+                $feedback->setProduct($product)
+                    ->setText($this->faker->realText(200))
+                    ->setCreatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'))
+                    ->setCreatedBy($this->getReference($this->faker->randomElement(UserFixtures::$users)));
+                $manager->persist($feedback);
+            }
+
             $manager->flush();
 
 
@@ -94,6 +105,7 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
     {
         return [
             CategoryFixtures::class,
+            UserFixtures::class,
         ];
     }
 

@@ -28,6 +28,10 @@ class ProductRepository extends ServiceEntityRepository
             ->addSelect('seller')
             ->leftJoin('p.productImages', 'i')
             ->addSelect('i')
+            ->leftJoin('p.feedbacks', 'feedbacks')
+            ->addSelect('feedbacks')
+            ->leftJoin('feedbacks.createdBy', 'createdBy')
+            ->addSelect('createdBy')
             ->where('p.id = :pId')
             ->orderBy('prices.cost', 'ASC')
             ->setParameter('pId', $id)
@@ -42,9 +46,7 @@ class ProductRepository extends ServiceEntityRepository
             ->addSelect('c')
             ->leftJoin('p.prices', 'prices')
             ->addSelect('prices')
-
-            ->addSelect('AVG(prices.cost)','prices.cost')
-
+            ->addSelect('AVG(prices.cost)', 'prices.cost')
             ->leftJoin('p.productImages', 'i')
             ->addSelect('i')
             ->orderBy('p.sort ASC, p.sold', 'ASC')
