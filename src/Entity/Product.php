@@ -34,6 +34,12 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductImage::class)]
     private Collection $productImages;
 
+    #[ORM\Column]
+    private ?int $sort = 0;
+
+    #[ORM\Column]
+    private ?int $sold = 0;
+
     public function __construct()
     {
         $this->prices = new ArrayCollection();
@@ -137,6 +143,30 @@ class Product
                 $productImage->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): self
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function getSold(): ?int
+    {
+        return $this->sold;
+    }
+
+    public function setSold(int $sold): self
+    {
+        $this->sold = $sold;
 
         return $this;
     }

@@ -17,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class ProductRepository extends ServiceEntityRepository
 {
 
-    public function getProduct(int $id):?Product
+    public function getProduct(int $id): ?Product
     {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.category', 'c')
@@ -29,11 +29,31 @@ class ProductRepository extends ServiceEntityRepository
             ->leftJoin('p.productImages', 'i')
             ->addSelect('i')
             ->where('p.id = :pId')
-            ->orderBy('prices.cost','ASC')
+            ->orderBy('prices.cost', 'ASC')
             ->setParameter('pId', $id)
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getTop(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.category', 'c')
+            ->addSelect('c')
+            ->leftJoin('p.prices', 'prices')
+            ->addSelect('prices')
+
+            ->addSelect('AVG(prices.cost)','prices.cost')
+
+            ->leftJoin('p.productImages', 'i')
+            ->addSelect('i')
+            ->orderBy('p.sort ASC, p.sold', 'ASC')
+            ->groupBy('p.id')
+            ->setMaxResults(8)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     public function __construct(ManagerRegistry $registry)
     {
