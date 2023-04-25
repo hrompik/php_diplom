@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Product;
+use App\Entity\ProductImage;
 use App\Service\FileUploader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,34 +14,42 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
     public static $products = [];
 
     private static $name = [
-        'Laptop',
-        'Mouser',
-        'Video card',
-        'Teapot',
-        'Spoon',
-        'Table',
+        'Ноутбук',
+        'Мышка',
+        'Видео карта',
+        'Чайник',
+        'Стол',
+        'Аквариум',
         'SSD',
-        'Monitor',
+        'Монитор',
     ];
     private static $color = [
-        'red',
-        'white',
-        'black',
-        'yellow',
-        'blue',
-        'green',
-        'gray',
+        'красный',
+        'белый',
+        'черный',
+        'желтый',
+        'синий',
+        'зелёный',
+        'серый',
     ];
     private static $size = [
-        'small',
-        'medium',
-        'little',
-        'big',
+        'маленький',
+        'средний',
+        'обычный',
+        'большой',
     ];
 
     public function __construct(private readonly FileUploader $fileUploader)
     {
     }
+
+    private $images = [
+        'sale/product.png',
+        'home/bigGoods.png',
+        'home/card.jpg',
+        'home/slider.png',
+        'home/videoca.png',
+    ];
 
     public function loadData(ObjectManager $manager): void
     {
@@ -53,16 +62,27 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
                         ) . ' ' . $this->faker->randomElement(self::$size)
                     )
                     ->setDescription($this->faker->realText(200))
-                    ->setCategory($this->getReference($this->faker->randomElement(CategoryFixtures::$categories)))
-                    ->setImg(
-                        $this->fileUploader->uploadFile(
-                            FileUploader::PRODUCTS_STORAGE,
-                            new File(
-                                dirname(dirname(__DIR__)) . '/public/assets/img/content/sale/product.png'
-                            )
-                        )
-                    );
+                    ->setCategory($this->getReference($this->faker->randomElement(CategoryFixtures::$categories)));
             });
+
+            for ($j = 0; $j < rand(1,5); $j++) {
+                $image = new ProductImage();
+
+                $image->setImg(
+                    $this->fileUploader->uploadFile(
+                        FileUploader::PRODUCTS_STORAGE,
+                        new File(
+                            dirname(
+                                dirname(__DIR__)
+                            ) . '/public/assets/img/content/' . $this->faker->randomElement($this->images)
+                        )
+                    )
+                )->setProduct($product);
+                $manager->persist($image);
+            }
+            $manager->flush();
+
+
             self::$products[] = 'Product' . $i;
             $this->addReference('Product' . $i, $product);
         }

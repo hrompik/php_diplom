@@ -31,21 +31,18 @@
                     <div class="ProductCard">
                         <div class="ProductCard-look">
                             <div class="ProductCard-photo">
-                                <div class="ProductCard-sale">-15%
-                                </div>
-                                <img src="{{ asset('/assets/img/content/home/bigGoods.png') }}" alt="bigGoods.png"/>
+                                <div class="ProductCard-sale">-15%</div>
+                                <img src="{{ uploaded_asset('product_uploads', product.productImages[0].img) }}"
+                                     alt="{{ product.productImages[0].img }}"/>
                             </div>
                             <div class="ProductCard-picts">
-                                <a class="ProductCard-pict ProductCard-pict_ACTIVE"
-                                   href="{{ asset('/assets/img/content/home/bigGoods.png') }}">
-                                    <img src="{{ asset('/assets/img/content/home/bigGoods.png') }}" alt="bigGoods.png"/>
-                                </a>
-                                <a class="ProductCard-pict" href="{{ asset('/assets/img/content/home/slider.png') }}">
-                                    <img src="{{ asset('/assets/img/content/home/slider.png') }}" alt="slider.png"/>
-                                </a>
-                                <a class="ProductCard-pict" href="{{ asset('/assets/img/content/home/videoca.png') }}">
-                                    <img src="{{ asset('/assets/img/content/home/videoca.png') }}" alt="videoca.png"/>
-                                </a>
+                                {% for key,img in  product.productImages %}
+                                    <a class="ProductCard-pict {% if key == 0 %}ProductCard-pict_ACTIVE{% endif %}"
+                                       href="{{ uploaded_asset('product_uploads', img.img) }}">
+                                        <img src="{{ uploaded_asset('product_uploads', img.img) }}"
+                                             alt="{{ img.img }}"/>
+                                    </a>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="ProductCard-desc">
@@ -110,7 +107,8 @@
                                 <h2>{{ product.name }}</h2>
                                 <p>{{ product.description }}
                                 </p>
-                                <img class="pict pict_right" src="{{ uploaded_asset('product_uploads', product.img) }}"
+                                <img class="pict pict_right"
+                                     src="{{ uploaded_asset('product_uploads', product.productImages[0].img) }}"
                                      alt="bigGoods.png"/>
                                 <ul>
                                     <li>Lorem ipsum dolor sit amet, consectetuer

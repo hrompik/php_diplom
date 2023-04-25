@@ -24,9 +24,6 @@ class Product
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $img = null;
-
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Price::class)]
     private Collection $prices;
 
@@ -34,9 +31,13 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductImage::class)]
+    private Collection $productImages;
+
     public function __construct()
     {
         $this->prices = new ArrayCollection();
+        $this->productImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -64,18 +65,6 @@ class Product
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getImg(): ?string
-    {
-        return $this->img;
-    }
-
-    public function setImg(?string $img): self
-    {
-        $this->img = $img;
 
         return $this;
     }
@@ -118,6 +107,36 @@ class Product
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductImage>
+     */
+    public function getProductImages(): Collection
+    {
+        return $this->productImages;
+    }
+
+    public function addProductImage(ProductImage $productImage): self
+    {
+        if (!$this->productImages->contains($productImage)) {
+            $this->productImages->add($productImage);
+            $productImage->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductImage(ProductImage $productImage): self
+    {
+        if ($this->productImages->removeElement($productImage)) {
+            // set the owning side to null (unless already changed)
+            if ($productImage->getProduct() === $this) {
+                $productImage->setProduct(null);
+            }
+        }
 
         return $this;
     }

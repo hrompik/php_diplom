@@ -26,6 +26,8 @@ class ProductRepository extends ServiceEntityRepository
             ->addSelect('prices')
             ->leftJoin('prices.seller', 'seller')
             ->addSelect('seller')
+            ->leftJoin('p.productImages', 'i')
+            ->addSelect('i')
             ->where('p.id = :pId')
             ->orderBy('prices.cost','ASC')
             ->setParameter('pId', $id)
