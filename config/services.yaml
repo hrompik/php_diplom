@@ -10,6 +10,8 @@ parameters:
   category_uploads_url: '%env(SITE_URL)%/%category_uploads%'
   product_uploads: 'uploads/products'
   product_uploads_url: '%env(SITE_URL)%/%product_uploads%'
+  banner_uploads: 'uploads/banners'
+  banner_uploads_url: '%env(SITE_URL)%/%banner_uploads%'
 
 services:
   # default configuration for services in *this* file
@@ -30,11 +32,15 @@ services:
   # please note that last definitions always *replace* previous ones
   App\Service\CategoriesService:
     bind:
-      $time: '%env(CACHE_TIME)%'
+      $time: '%env(CACHE_MENU)%'
 
   App\Service\ProductsService:
     bind:
-      $time: '%env(CACHE_TIME)%'
+      $time: '%env(CACHE_PRODUCT)%'
+
+  App\Service\BannerService:
+    bind:
+      $time: '%env(CACHE_BANNER)%'
 
   App\EventListener\CategoriesChanged:
     tags:
@@ -47,3 +53,9 @@ services:
       - { name: 'doctrine.orm.entity_listener', event: 'postPersist', entity: 'App\Entity\Product' }
       - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Product' }
       - { name: 'doctrine.orm.entity_listener', event: 'postRemove', entity: 'App\Entity\Product' }
+
+  App\EventListener\BannerChanged:
+    tags:
+      - { name: 'doctrine.orm.entity_listener', event: 'postPersist', entity: 'App\Entity\Banner' }
+      - { name: 'doctrine.orm.entity_listener', event: 'postUpdate', entity: 'App\Entity\Banner' }
+      - { name: 'doctrine.orm.entity_listener', event: 'postRemove', entity: 'App\Entity\Banner' }
