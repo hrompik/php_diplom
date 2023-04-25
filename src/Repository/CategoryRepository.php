@@ -32,7 +32,7 @@ class CategoryRepository extends ServiceEntityRepository
             ->innerJoin('c.products', 'p')
             ->addSelect('p')
             ->andWhere('c.parent IS NULL')
-            ->orderBy('c.sort DESC, ch.sort', 'DESC')
+            ->orderBy('c.sort ASC, ch.sort', 'ASC')
             ->getQuery()
             ->getResult();
     }
