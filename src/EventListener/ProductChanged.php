@@ -11,9 +11,10 @@ use Doctrine\ORM\Event\PostUpdateEventArgs;
 
 class ProductChanged
 {
-    public function __construct(private readonly ProductsService $productsService,
-    private readonly TopService $topService)
-    {
+    public function __construct(
+        private readonly ProductsService $productsService,
+        private readonly TopService $topService
+    ) {
     }
 
 
@@ -21,21 +22,18 @@ class ProductChanged
     {
         $this->productsService->resetProduct($product->getId());
         $this->topService->resetTop();
-
     }
 
     public function postPersist(Product $product, PostPersistEventArgs $event): void
     {
         $this->productsService->resetProduct($product->getId());
         $this->topService->resetTop();
-
     }
 
     public function postRemove(Product $product, PostRemoveEventArgs $event): void
     {
         $this->productsService->resetProduct($product->getId());
         $this->topService->resetTop();
-
     }
 
 

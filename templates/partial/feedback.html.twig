@@ -1,4 +1,5 @@
 <div class="Comments">
+    {{ dump(product.feedbacks) }}
     {% for feedback in product.feedbacks %}
         <div class="Comment">
             <div class="Comment-column Comment-column_pict">
@@ -18,15 +19,17 @@
 
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <header class="Section-header Section-header_product">
-        <h3 class="Section-title">Оставить отзыв</h3></header>
+        <h3 class="Section-title">Оставить отзыв</h3>
+    </header>
     <div class="Tabs-addComment">
-        <form class="form" action="#" method="post">
-            <div class="form-group">
-                <textarea class="form-textarea" name="review" id="review" placeholder="Ваш комментарий..."> </textarea>
-            </div>
-            <div class="form-group">
-                <button class="btn btn_muted" type="submit">Оставить отзыв</button>
-            </div>
-        </form>
+        {{ form_start(feedbackForm, { attr: {class: 'form'} }) }}
+        <div class="form-group {% if not feedbackForm.text.vars.valid %}form-input_error{% endif %}">
+            {{ form_errors(feedbackForm.text) }}
+            {{ form_widget(feedbackForm.text) }}
+        </div>
+        <div class="form-group">
+            <button class="btn btn_muted" type="submit">Оставить отзыв</button>
+        </div>
+        {{ form_end(feedbackForm) }}
     </div>
 {% endif %}

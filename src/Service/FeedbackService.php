@@ -2,31 +2,55 @@
 
 namespace App\Service;
 
+use App\Entity\Feedback;
+use App\Entity\Product;
+use App\Form\FeedbackFormType;
+use App\Repository\FeedbackRepository;
 use App\Repository\ProductRepository;
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Contracts\Cache\ItemInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
-class FeedbackService
+class FeedbackService extends AbstractController
 {
 
     public function __construct(
-        private readonly int $time,
-        private readonly CacheItemPoolInterface $cache,
-        private readonly ProductRepository $productRepository
+        private readonly EntityManagerInterface $em,
+        private readonly ProductRepository $productRepository,
+        private readonly ProductsService $productsService,
+        private readonly FeedbackRepository $feedbackRepository,
     ) {
     }
 
-    public function resetTop()
+    public function addFeedback(int $productId, Request $request): \Symfony\Component\Form\FormView
     {
-        $this->cache->deleteItem('Top');
+        $form = $this->createForm(FeedbackFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Feedback $feedback */
+            /** @var Product $product */
+            $product = $this->productRepository->getProduct($productId);
+            $feedback = $form->getData();
+            $feedback
+                ->setCreatedBy($this->getUser());
+            $this->em->persist($feedback);
+            $product = $product->addFeedback($feedback);
+            $this->em->persist($product);
+            $this->em->flush();
+            $this->productsService->resetProduct($productId);
+            $form = $this->createForm(FeedbackFormType::class);
+        }
+        return $form->createView();
     }
 
-    public function getTop()
+    public function getFeedbacks(int $productId): array
     {
-        return $this->cache->get('Top', function (ItemInterface $item) {
-            $item->expiresAfter($this->time);
-            return $this->productRepository->getTop();
-        });
+        return $this->feedbackRepository->findBy(['product.id' => $productId]);
     }
 
+    public function getFeedbacksCount(int $productId): int
+    {
+        return count($this->feedbackRepository->findBy(['product.id' => $productId]));
+    }
 }

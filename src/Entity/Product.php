@@ -41,6 +41,7 @@ class Product
     private ?int $sold = 0;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Feedback::class)]
+    #[ORM\OrderBy(['createdAt' => "DESC"])]
     private Collection $feedbacks;
 
     public function __construct()
