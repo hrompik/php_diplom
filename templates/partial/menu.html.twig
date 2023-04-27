@@ -11,7 +11,7 @@
         <div class="CategoriesButton-content">
             {% for category in categories %}
                 <div class="CategoriesButton-link">
-                    <a href="{{ path('app_catalog_category',{id:category.id}) }}">
+                    <a href="{{ path('app_catalog') }}?categoryId={{ category.id }}">
                         <div class="CategoriesButton-icon">
                             <img src="{{ uploaded_asset('category_uploads_url',category.icon) }}"
                                  alt="{{ category.icon }}"/>
@@ -22,7 +22,8 @@
                         <a class="CategoriesButton-arrow" href="#"></a>
                         <div class="CategoriesButton-submenu">
                             {% for subCategory in category.children %}
-                                <a href="{{ path('app_catalog_category',{id:subCategory.id}) }}" class="CategoriesButton-link">
+                                <a href="{{ path('app_catalog') }}?categoryId={{ subCategory.id }}"
+                                   class="CategoriesButton-link">
                                     <div class="CategoriesButton-icon">
                                         <img src="{{ uploaded_asset('category_uploads_url',subCategory.icon) }}"
                                              alt="{{ subCategory.icon }}"/>

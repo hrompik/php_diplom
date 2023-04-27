@@ -1,0 +1,17 @@
+knp_paginator:
+    default_options:
+        sort_field_name:      sort
+        sort_direction_name:  direction
+        filter_field_name:    filterField
+        filter_value_name:    filterValue
+        page_name:            page
+        distinct:             true
+        page_out_of_range:    ignore
+        default_limit:        8
+    template:
+        pagination:           'partial/paginator.html.twig'
+        filtration:           '@KnpPaginator/Pagination/filtration.html.twig'
+        sortable:             '@KnpPaginator/Pagination/sortable_link.html.twig'
+    page_range:           5
+    page_limit:           5
+    convert_exception:    false

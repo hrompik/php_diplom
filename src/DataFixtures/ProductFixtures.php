@@ -64,6 +64,7 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
                     )
                     ->setDescription($this->faker->realText(200))
                     ->setCategory($this->getReference($this->faker->randomElement(CategoryFixtures::$categories)))
+                    ->setCreatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'))
                     ->setSort(rand(1, 50))
                     ->setSold(rand(1, 500));
             });

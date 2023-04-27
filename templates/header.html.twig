@@ -105,12 +105,49 @@
             </div>
             <div class="Header-search">
                 <div class="search">
-                    <form class="form form_search" action="#" method="post">
-                        <input class="search-input" id="query" name="query" type="text" placeholder="Найти..."/>
+                    <form class="form form_search" action="{{ path('app_catalog') }}" method="get" id="mainSearch">
+                        <input class="search-input" id="query" name="q" type="text" placeholder="Найти..."
+                               value="{{ app.request.query.get('q') }}"/>
                         <button class="search-button" type="submit" name="search" id="search"><img
                                     src="{{ asset('/assets/img/icons/search.svg') }}" alt="search.svg"/>Поиск
                         </button>
                     </form>
+                    <script>
+                        $(function () {
+                            $(`#mainSearch`).on('submit', function () {
+                                sendForm()
+                                return false;
+                            })
+                        })
+                    </script>
+
+                    <script>
+                        function sendForm() {
+
+                            let priceFrom = $(`#price`).data(`from`)
+                            let priceTo = $(`#price`).data(`to`)
+                            let title = $(`#title`).val()
+                            let q = $(`#query`).val()
+                            let sorted = $(`#sorted`).val()
+
+                            const searchParams = new URLSearchParams(window.location.search);
+                            searchParams.set(`priceFrom`, priceFrom)
+                            searchParams.set(`priceTo`, priceTo)
+                            searchParams.set(`title`, title)
+                            searchParams.set(`q`, q)
+                            searchParams.set(`sorted`, sorted)
+
+                            let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + window.location.hash;
+                            window.history.pushState({path: newurl}, '', newurl);
+                            window.location = newurl
+                            // if (reload) {
+                            //     let hash = window.location.hash
+                            //     window.location.hash = ''
+                            //
+                            //
+                            // }
+                        }
+                    </script>
                 </div>
             </div>
         </div>
