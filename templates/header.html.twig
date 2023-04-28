@@ -127,8 +127,17 @@
                             let priceFrom = $(`#price`).data(`from`)
                             let priceTo = $(`#price`).data(`to`)
                             let title = $(`#title`).val()
+                            let sellerId = $(`#sellerId`).val()
                             let q = $(`#query`).val()
                             let sorted = $(`#sorted`).val()
+                            let colors = $(`#colors`).val()
+
+                            let crackedScreen = $(`#crackedScreen`).prop(`checked`)
+                            if (crackedScreen) {
+                                crackedScreen = 'no'
+                            } else {
+                                crackedScreen = 'yes'
+                            }
 
                             const searchParams = new URLSearchParams(window.location.search);
                             searchParams.set(`priceFrom`, priceFrom)
@@ -136,16 +145,11 @@
                             searchParams.set(`title`, title)
                             searchParams.set(`q`, q)
                             searchParams.set(`sorted`, sorted)
+                            searchParams.set(`sellerId`, sellerId)
+                            searchParams.set(`colors`, colors)
+                            searchParams.set(`crackedScreen`, crackedScreen)
 
-                            let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + window.location.hash;
-                            window.history.pushState({path: newurl}, '', newurl);
-                            window.location = newurl
-                            // if (reload) {
-                            //     let hash = window.location.hash
-                            //     window.location.hash = ''
-                            //
-                            //
-                            // }
+                            window.location = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + window.location.hash
                         }
                     </script>
                 </div>

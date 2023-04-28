@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Feedback;
 use App\Entity\Product;
 use App\Entity\ProductImage;
+use App\Entity\ProductParams;
 use App\Service\FileUploader;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -55,12 +56,14 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
     public function loadData(ObjectManager $manager): void
     {
         for ($i = 0; $i < 50; $i++) {
-            $product = $this->create(Product::class, function (Product $product) use ($manager) {
+            $color = $this->faker->randomElement(self::$color);
+
+            $product = $this->create(Product::class, function (Product $product) use ($manager, $color) {
                 $product
                     ->setName(
-                        $this->faker->randomElement(self::$name) . ' ' . $this->faker->randomElement(
-                            self::$color
-                        ) . ' ' . $this->faker->randomElement(self::$size)
+                        $this->faker->randomElement(self::$name) . ' ' . $color . ' ' . $this->faker->randomElement(
+                            self::$size
+                        )
                     )
                     ->setDescription($this->faker->realText(200))
                     ->setCategory($this->getReference($this->faker->randomElement(CategoryFixtures::$categories)))
@@ -93,6 +96,26 @@ class ProductFixtures extends BaseFixtures implements DependentFixtureInterface
                     ->setCreatedBy($this->getReference($this->faker->randomElement(UserFixtures::$users)));
                 $manager->persist($feedback);
             }
+
+            $productParams = new ProductParams();
+            $productParams->setProduct($product)
+                ->setName('color')
+                ->setValue($color);
+            $manager->persist($productParams);
+
+            if ($this->faker->boolean()) {
+                $productParams = new ProductParams();
+                $productParams->setProduct($product)
+                    ->setName('crackedScreen')
+                    ->setValue('yes');
+            } else {
+                $productParams = new ProductParams();
+                $productParams->setProduct($product)
+                    ->setName('crackedScreen')
+                    ->setValue('no');
+            }
+
+            $manager->persist($productParams);
 
             $manager->flush();
 

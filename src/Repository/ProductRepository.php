@@ -48,51 +48,60 @@ class ProductRepository extends ServiceEntityRepository
         ?string $title,
         ?string $sorted = null,
         ?array $ids = [],
-
-        ?int $sellerId = null
+        ?string $sellerId = null,
+        ?string $colors = '',
+        ?string $crackedScreen = '',
+        ?string $categoryId = ''
     ) {
-        $qb = $this->createQueryBuilder('product');
-
-        $qb
+        $qb = $this->createQueryBuilder('product')
             ->innerJoin('product.category', 'category')
-            ->addSelect('category');
-
-        $qb
+            ->addSelect('category')
             ->innerJoin('product.prices', 'prices')
-            ->addSelect('prices');
-
-        $qb
+            ->addSelect('prices')
             ->innerJoin('prices.seller', 'seller')
-            ->addSelect('seller');
-
-        $qb->addSelect('AVG(prices.cost) as cost');
-
-        $qb
+            ->addSelect('seller')
             ->innerJoin('product.productImages', 'productImages')
-            ->addSelect('productImages');
-
-        $qb
-            ->innerJoin('product.feedbacks', 'f');
-        $qb->addSelect('COUNT(f.id) as feedbacks');
-
-
+            ->addSelect('productImages')
+            ->innerJoin('product.productParams', 'productParamsColor')
+            ->innerJoin('product.productParams', 'productParamsScreen')
+            ->innerJoin('product.feedbacks', 'f')
+            ->addSelect('COUNT(f.id) as feedbacks')
+            ->addSelect('AVG(prices.cost) as cost');
         if ($search) {
-            $qb
-                ->andWhere('product.name LIKE :search OR product.description LIKE :search')
+            $qb->andWhere('product.name LIKE :search OR product.description LIKE :search')
                 ->setParameter('search', '%' . $search . '%');
         }
         if ($title) {
-            $qb
-                ->andWhere('product.name LIKE :title')
+            $qb->andWhere('product.name LIKE :title')
                 ->setParameter('title', '%' . $title . '%');
         }
+        if (count($ids) > 0) {
+            $qb->andWhere('product.id IN (:ids)')
+                ->setParameter(':ids', $ids);
+        }
+        if ($sellerId) {
+            $qb->andWhere('seller.id = :sellerId')
+                ->setParameter(':sellerId', $sellerId);
+        }
 
-        $qb
-            ->andWhere('product.id IN (:ids)')
-            ->setParameter(':ids', $ids);
+        if ($colors) {
+            $colors = explode(',', $colors);
+            $qb->andWhere('productParamsColor.name = \'color\'')
+                ->andWhere('productParamsColor.value in (:colors)')
+                ->setParameter('colors', $colors);
+        }
 
+        if ($crackedScreen === 'no') {
+            $qb->andWhere('productParamsScreen.name = \'crackedScreen\'')
+                ->andWhere('productParamsScreen.value = :crackedScreen')
+                ->setParameter('crackedScreen', $crackedScreen);
+        }
+
+        if ($categoryId) {
+            $qb->andWhere('category.id = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+        }
         $qb->groupBy('product.id');
-
 
         switch ($sorted) {
             case 'price':
@@ -123,8 +132,11 @@ class ProductRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function getProduct(int $id): ?Product
-    {
+
+    public
+    function getProduct(
+        int $id
+    ): ?Product {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.category', 'c')
             ->addSelect('c')
@@ -145,7 +157,8 @@ class ProductRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getTop(): array
+    public
+    function getTop(): array
     {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.category', 'c')
@@ -163,13 +176,18 @@ class ProductRepository extends ServiceEntityRepository
     }
 
 
-    public function __construct(ManagerRegistry $registry)
-    {
+    public
+    function __construct(
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, Product::class);
     }
 
-    public function save(Product $entity, bool $flush = false): void
-    {
+    public
+    function save(
+        Product $entity,
+        bool $flush = false
+    ): void {
         $this->getEntityManager()->persist($entity);
 
         if ($flush) {
@@ -177,8 +195,11 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Product $entity, bool $flush = false): void
-    {
+    public
+    function remove(
+        Product $entity,
+        bool $flush = false
+    ): void {
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {

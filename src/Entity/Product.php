@@ -44,11 +44,15 @@ class Product
     #[ORM\OrderBy(['createdAt' => "DESC"])]
     private Collection $feedbacks;
 
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductParams::class)]
+    private Collection $productParams;
+
     public function __construct()
     {
         $this->prices = new ArrayCollection();
         $this->productImages = new ArrayCollection();
         $this->feedbacks = new ArrayCollection();
+        $this->productParams = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +204,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($feedback->getProduct() === $this) {
                 $feedback->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductParams>
+     */
+    public function getProductParams(): Collection
+    {
+        return $this->productParams;
+    }
+
+    public function addProductParam(ProductParams $productParam): self
+    {
+        if (!$this->productParams->contains($productParam)) {
+            $this->productParams->add($productParam);
+            $productParam->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductParam(ProductParams $productParam): self
+    {
+        if ($this->productParams->removeElement($productParam)) {
+            // set the owning side to null (unless already changed)
+            if ($productParam->getProduct() === $this) {
+                $productParam->setProduct(null);
             }
         }
 
